@@ -34,6 +34,11 @@ namespace RyanSync
 
         private DirectoryInfo frameDirectory = null;
         private string[] frameFiles = null;
+
+        private void setupAuthorization(HttpWebRequest rq)
+        {
+            rq.Credentials = new NetworkCredential("ryan", "iscute");
+        }
         
         private void refreshServer()
         {
@@ -45,14 +50,26 @@ namespace RyanSync
 
             // Request the list.php JSON object:
             HttpWebRequest rq = (HttpWebRequest)HttpWebRequest.Create(listUri);
+            setupAuthorization(rq);
 
             // Asynchronously get the response from the URI:
             rq.BeginGetResponse(new AsyncCallback((ar) =>
             {
                 HttpWebRequest myRq = (HttpWebRequest)ar.AsyncState;
-                HttpWebResponse rsp = (HttpWebResponse)myRq.EndGetResponse(ar);
+                try
+                {
+                    HttpWebResponse rsp = (HttpWebResponse)myRq.EndGetResponse(ar);
 
-                handleServerResponse(myRq, rsp);
+                    handleServerResponse(myRq, rsp);
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(ex.ToString());
+                    Dispatcher.Invoke((Action)(() =>
+                    {
+                        MessageBox.Show(this, ex.Message, "Server Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }));
+                }
             }), rq);
         }
 
@@ -66,6 +83,8 @@ namespace RyanSync
 
             // Request the list.php JSON object:
             HttpWebRequest rq = (HttpWebRequest)HttpWebRequest.Create(listUri);
+            setupAuthorization(rq);
+
             HttpWebResponse rsp = (HttpWebResponse)rq.GetResponse();
             
             handleServerResponse(rq, rsp);
@@ -132,6 +151,10 @@ namespace RyanSync
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.ToString());
+                Dispatcher.Invoke((Action)(() =>
+                {
+                    MessageBox.Show(this, ex.Message, "Client Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }));
                 return false;
             }
         }
@@ -140,7 +163,7 @@ namespace RyanSync
         {
             if (!syncServerToFrame())
             {
-                MessageBox.Show(this, "Failed.", "Fail", MessageBoxButton.OK);
+                MessageBox.Show(this, "Failed", "Fail", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -176,15 +199,17 @@ namespace RyanSync
 
                 // Request the file from the server:
                 HttpWebRequest rq = (HttpWebRequest)HttpWebRequest.Create(fileUri);
+                setupAuthorization(rq);
 
                 // Asynchronously get the response:
                 rq.BeginGetResponse(new AsyncCallback((ar) =>
                 {
                     HttpWebRequest myRq = (HttpWebRequest)ar.AsyncState;
-                    HttpWebResponse rsp = (HttpWebResponse)myRq.EndGetResponse(ar);
 
                     try
                     {
+                        HttpWebResponse rsp = (HttpWebResponse)myRq.EndGetResponse(ar);
+
                         // Download the content into a file:
                         using (FileStream fi = File.Open(System.IO.Path.Combine(frameDirectory.FullName, fileName), FileMode.Create, FileAccess.Write, FileShare.Read))
                         {
@@ -206,7 +231,7 @@ namespace RyanSync
                         Trace.WriteLine(ex.ToString());
                         Dispatcher.Invoke((Action)(() =>
                         {
-                            lstFolder.Items.Add(fileName + " (ERROR)");
+                            lstFolder.Items.Add(fileName + " (ERROR: " + ex.Message + ")");
                         }));
                     }
                     finally
