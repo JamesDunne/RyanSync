@@ -37,13 +37,25 @@ namespace RyanSync.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\TFS\\Ryan\\")]
-        public string DigitalFramePath {
+        [global::System.Configuration.DefaultSettingValueAttribute("NIX")]
+        public string DigitalFrameLabel {
             get {
-                return ((string)(this["DigitalFramePath"]));
+                return ((string)(this["DigitalFrameLabel"]));
             }
             set {
-                this["DigitalFramePath"] = value;
+                this["DigitalFrameLabel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NIX Internal Memory   (Copy all Media Files here)")]
+        public string DigitalFrameSubdirectory {
+            get {
+                return ((string)(this["DigitalFrameSubdirectory"]));
+            }
+            set {
+                this["DigitalFrameSubdirectory"] = value;
             }
         }
     }

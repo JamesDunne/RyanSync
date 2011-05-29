@@ -5,8 +5,11 @@
     <Setting Name="RyanServer" Type="System.Uri" Scope="User">
       <Value Profile="(Default)">http://bittwiddlers.org/ryan/</Value>
     </Setting>
-    <Setting Name="DigitalFramePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\TFS\Ryan\</Value>
+    <Setting Name="DigitalFrameLabel" Type="System.String" Scope="User">
+      <Value Profile="(Default)">NIX</Value>
+    </Setting>
+    <Setting Name="DigitalFrameSubdirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">NIX Internal Memory   (Copy all Media Files here)</Value>
     </Setting>
   </Settings>
 </SettingsFile>

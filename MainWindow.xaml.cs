@@ -116,12 +116,7 @@ namespace RyanSync
         {
             if (!refreshFrame())
             {
-                MessageBoxResult result = MessageBox.Show(this, String.Format("Could not find folder '{0}'. Create it?", Properties.Settings.Default.DigitalFramePath), "Create folder?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes);
-                if (result == MessageBoxResult.Yes)
-                {
-                    frameDirectory.Create();
-                    refreshFrame();
-                }
+                MessageBox.Show(this, "Digital frame not connected!", "Not connected!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -129,7 +124,25 @@ namespace RyanSync
         {
             try
             {
-                frameDirectory = new DirectoryInfo(Properties.Settings.Default.DigitalFramePath);
+                var frameDrive = (
+                    from drv in System.IO.DriveInfo.GetDrives()
+                    where drv.IsReady   // must be first check or else "Drive Not Ready" exception is thrown
+                    where drv.DriveType == DriveType.Removable
+                    where drv.VolumeLabel == Properties.Settings.Default.DigitalFrameLabel
+                    select drv
+                ).SingleOrDefault();
+                if (frameDrive == null)
+                    return false;
+
+                // Now find the dedicated subdirectory (currently only one level deep allowed):
+                frameDirectory = (
+                    from dir in frameDrive.RootDirectory.GetDirectories()
+                    where String.Compare(dir.Name, Properties.Settings.Default.DigitalFrameSubdirectory, true) == 0
+                    select dir
+                ).SingleOrDefault();
+
+                if (frameDirectory == null) frameDirectory = frameDrive.RootDirectory;
+
                 if (!frameDirectory.Exists) return false;
 
                 lblFrame.Content = "Digital Frame (" + frameDirectory.FullName + "):";
