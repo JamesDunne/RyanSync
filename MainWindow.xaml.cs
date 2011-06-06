@@ -21,6 +21,7 @@ namespace RyanSync
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
+    /// 6/6/2011 JDunne Added comment for testing commit..
     /// </summary>
     public partial class MainWindow : Window
     {
