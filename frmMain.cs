@@ -24,6 +24,7 @@ namespace RyanSync
 
         private void frmMain_Load(object sender, EventArgs e)
         {
+            pgbUpdateProgress.Visible = false;
             tmrUpdate.Enabled = true;
             tmrUpdate.Interval = 900000;
             lblNotification.Text = "";
@@ -69,7 +70,7 @@ namespace RyanSync
                     Trace.WriteLine(ex.ToString());
                     
                     //Dispatcher.Invoke((Action)(() =>
-                    BeginInvoke((Action)(() =>
+                    UIBlockingInvoke(new MethodInvoker(delegate()
                     {
                         //MessageBox.Show(this, ex.Message, "Server Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         lblNotification.Text = "Server Error";
@@ -109,7 +110,7 @@ namespace RyanSync
 
             // Add the filenames to the list:
             //Dispatcher.Invoke((Action)(() =>
-            BeginInvoke((Action)(() =>
+            UIBlockingInvoke(new MethodInvoker(delegate()
             {
                 lstServer.Items.Clear();
                 foreach (string fileName in serverFiles)
@@ -173,7 +174,7 @@ namespace RyanSync
             {
                 Trace.WriteLine(ex.ToString());
                 //Dispatcher.Invoke((Action)(() =>
-                BeginInvoke((Action)(() =>
+                UIBlockingInvoke(new MethodInvoker(delegate()
                 {
                     //MessageBox.Show(this, ex.Message, "Client Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     lblNotification.Text = "Client Error";
@@ -215,6 +216,7 @@ namespace RyanSync
             pgbUpdateProgress.Maximum = toSync.Count;
             pgbUpdateProgress.Value = 0;
             pgbUpdateProgress.Visible = true;
+            Application.DoEvents();         //display the progress bar change..
 
             // Disable the sync button and proceed:
             btnSync.Enabled = false;
@@ -250,7 +252,7 @@ namespace RyanSync
                         }
 
                         // Add the filename to the frame's list:
-                        BeginInvoke((Action)(() =>
+                        UIBlockingInvoke(new MethodInvoker(delegate()
                         {
                             lstFolder.Items.Add(fileName);
                             pgbUpdateProgress.Value++;
@@ -259,7 +261,7 @@ namespace RyanSync
                     catch (Exception ex)
                     {
                         Trace.WriteLine(ex.ToString());
-                        BeginInvoke((Action)(() =>
+                        UIBlockingInvoke(new MethodInvoker(delegate()
                         {
                             lstFolder.Items.Add(fileName + " (ERROR: " + ex.Message + ")");
                         }));
@@ -270,8 +272,9 @@ namespace RyanSync
                         if (Interlocked.Increment(ref filesSynchronizing) == filesToSynchronize)
                         {
                             // If we're last in line, re-enable the sync button:
-                            BeginInvoke((Action)(() =>
+                            UIBlockingInvoke(new MethodInvoker(delegate()
                             {
+                                pgbUpdateProgress.Visible = false;
                                 btnSync.Enabled = true;
                                 //MessageBox.Show(this, "Completed", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 lblNotification.Text = "Completed Successfully";
@@ -280,7 +283,6 @@ namespace RyanSync
                     }
                 }), rq);
             }
-            pgbUpdateProgress.Visible = false;
             return true;
         }
 
@@ -300,6 +302,36 @@ namespace RyanSync
             {
                 //MessageBox.Show(this, "Failed", "Fail", MessageBoxButton.OK, MessageBoxImage.Error);
                 lblNotification.Text = "Failed Sync";
+            }
+        }
+
+        /// <summary>
+        /// Runs a MethodInvoker delegate on the UI thread from whichever thread we are currently calling from and BLOCKS until it is complete
+        /// </summary>
+        /// <param name="ivk"></param>
+        public void UIBlockingInvoke(MethodInvoker ivk)
+        {
+            System.Threading.ManualResetEvent UIAsyncComplete = new System.Threading.ManualResetEvent(false);
+            UIAsyncComplete.Reset();
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new MethodInvoker(delegate()
+                {
+                    try
+                    {
+                        ivk();
+                    }
+                    finally
+                    {
+                        UIAsyncComplete.Set();
+                    }
+                }));
+
+                UIAsyncComplete.WaitOne();
+            }
+            else
+            {
+                ivk();
             }
         }
 

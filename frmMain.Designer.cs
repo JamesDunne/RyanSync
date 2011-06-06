@@ -64,7 +64,7 @@
             // btnSync
             // 
             this.btnSync.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSync.Location = new System.Drawing.Point(563, 4);
+            this.btnSync.Location = new System.Drawing.Point(570, 330);
             this.btnSync.Name = "btnSync";
             this.btnSync.Size = new System.Drawing.Size(86, 27);
             this.btnSync.TabIndex = 2;
@@ -94,9 +94,9 @@
             // pgbUpdateProgress
             // 
             this.pgbUpdateProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pgbUpdateProgress.Location = new System.Drawing.Point(280, 330);
+            this.pgbUpdateProgress.Location = new System.Drawing.Point(276, 330);
             this.pgbUpdateProgress.Name = "pgbUpdateProgress";
-            this.pgbUpdateProgress.Size = new System.Drawing.Size(369, 19);
+            this.pgbUpdateProgress.Size = new System.Drawing.Size(288, 19);
             this.pgbUpdateProgress.TabIndex = 5;
             // 
             // lblNotification
