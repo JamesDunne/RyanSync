@@ -37,6 +37,7 @@
             this.pgbUpdateProgress = new System.Windows.Forms.ProgressBar();
             this.lblNotification = new System.Windows.Forms.Label();
             this.tmrUpdate = new System.Windows.Forms.Timer(this.components);
+            this.cbxForceConnection = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // lstServer
@@ -114,11 +115,23 @@
             this.tmrUpdate.Interval = 900000;
             this.tmrUpdate.Tick += new System.EventHandler(this.tmrUpdate_Tick);
             // 
+            // cbxForceConnection
+            // 
+            this.cbxForceConnection.AutoSize = true;
+            this.cbxForceConnection.Location = new System.Drawing.Point(135, 336);
+            this.cbxForceConnection.Name = "cbxForceConnection";
+            this.cbxForceConnection.Size = new System.Drawing.Size(96, 17);
+            this.cbxForceConnection.TabIndex = 7;
+            this.cbxForceConnection.Text = "Force Connect";
+            this.cbxForceConnection.UseVisualStyleBackColor = true;
+            this.cbxForceConnection.CheckedChanged += new System.EventHandler(this.cbxForceConnection_CheckedChanged);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(662, 361);
+            this.Controls.Add(this.cbxForceConnection);
             this.Controls.Add(this.lblNotification);
             this.Controls.Add(this.pgbUpdateProgress);
             this.Controls.Add(this.lblServer);
@@ -146,6 +159,7 @@
         private System.Windows.Forms.ProgressBar pgbUpdateProgress;
         private System.Windows.Forms.Label lblNotification;
         private System.Windows.Forms.Timer tmrUpdate;
+        private System.Windows.Forms.CheckBox cbxForceConnection;
     }
 }
 

@@ -12,11 +12,14 @@ using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Threading;
 using System.Diagnostics;
+using System.IO.Ports;
 
 namespace RyanSync
 {
     public partial class frmMain : Form
     {
+        System.IO.Ports.SerialPort mySerialPort = new System.IO.Ports.SerialPort();
+
         public frmMain()
         {
             InitializeComponent();
@@ -24,12 +27,16 @@ namespace RyanSync
 
         private void frmMain_Load(object sender, EventArgs e)
         {
+            string[] PortNames = System.IO.Ports.SerialPort.GetPortNames();
+            //select the last port.  (Lame solution.. for now it'll work though)
+            mySerialPort.PortName = PortNames[PortNames.Length-1];
+
             pgbUpdateProgress.Visible = false;
             tmrUpdate.Enabled = true;
             tmrUpdate.Interval = 900000;
             lblNotification.Text = "";
             refreshServer();
-            refreshFrame();
+            //refreshFrame();
         }
 
         private Uri serverBaseUri = null;
@@ -199,6 +206,22 @@ namespace RyanSync
         {
             if (filesSynchronizing < filesToSynchronize) return false;
 
+            try
+            {
+                if (!mySerialPort.IsOpen)
+                {
+                    mySerialPort.Open();
+                    System.Threading.Thread.Sleep(1000);        //give it a second to open the port before doing anything..
+                }
+                mySerialPort.DtrEnable = true;              //Connect
+                System.Threading.Thread.Sleep(15000);        //give it a LONG WHILE to find all the drives before doing anything..
+            }
+            catch (Exception ex)
+            {
+                lblNotification.Text = "Failed to open RS232 port. Error:" + ex.Message;
+                return false;
+            }
+
             refreshFrameAndAsk();
             if (frameFiles == null) return false;
             refreshServerSync();
@@ -278,6 +301,13 @@ namespace RyanSync
                                 btnSync.Enabled = true;
                                 //MessageBox.Show(this, "Completed", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 lblNotification.Text = "Completed Successfully";
+
+                                if (mySerialPort.IsOpen)
+                                {
+                                    mySerialPort.DtrEnable = false;
+                                    System.Threading.Thread.Sleep(5000);     //give an extra second to disconnect fully.
+                                    mySerialPort.Close();
+                                }
                             }));
                         }
                     }
@@ -332,6 +362,29 @@ namespace RyanSync
             else
             {
                 ivk();
+            }
+        }
+
+        private void cbxForceConnection_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbxForceConnection.Checked)
+            {
+                if (!mySerialPort.IsOpen)
+                {
+                    mySerialPort.Open();
+                    System.Threading.Thread.Sleep(1000);        //give it a second to open the port before doing anything..
+                }
+                mySerialPort.DtrEnable = true;              //Connect
+                System.Threading.Thread.Sleep(3000);        //give it a second to open the port before doing anything..
+            }
+            else
+            {
+                if (mySerialPort.IsOpen)
+                {
+                    mySerialPort.DtrEnable = false;
+                    System.Threading.Thread.Sleep(5000);     //give a WHILE to disconnect fully otherwise the frame goes NUTS!
+                    mySerialPort.Close();
+                }
             }
         }
 
