@@ -43,25 +43,25 @@ namespace UsbEject.Library
 				throw new Win32Exception(Marshal.GetLastWin32Error());
 		}
 
-//        protected bool disposed = false;
-//
-//        ~DeviceClass()
-//        {
-//            CleanUp(false);
-//        }
-//
-//        protected void CleanUp(bool disposing)
-//        {
-//            if (!disposed)
-//            {
-//                if (_deviceInfoSet != IntPtr.Zero)
-//                {
-//                    Native.SetupDiDestroyDeviceInfoList(_deviceInfoSet);
-//                    _deviceInfoSet = IntPtr.Zero;
-//                }
-//            }
-//            disposed = true;
-//        }
+        protected bool disposed = false;
+
+        ~DeviceClass()
+        {
+            CleanUp(false);
+        }
+
+        protected void CleanUp(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (_deviceInfoSet != IntPtr.Zero)
+                {
+                    Native.SetupDiDestroyDeviceInfoList(_deviceInfoSet);
+                    _deviceInfoSet = IntPtr.Zero;
+                }
+            }
+            disposed = true;
+        }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -69,8 +69,8 @@ namespace UsbEject.Library
 		public void Dispose()
 		{
 
-            //CleanUp(true);
-            //GC.SuppressFinalize(this);
+            CleanUp(true);
+            GC.SuppressFinalize(this);
 
 			if (_deviceInfoSet != IntPtr.Zero)
 			{

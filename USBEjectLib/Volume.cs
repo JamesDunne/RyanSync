@@ -88,30 +88,6 @@ namespace UsbEject.Library
         /// <summary>
         /// Gets a list of underlying disks for this volume.
         /// </summary>
-        //public List<Device> Disks
-        //{
-        //    get
-        //    {
-        //        if (_disks == null)
-        //        {
-        //            _disks = new List<Device>();
-
-        //            if (DiskNumbers != null)
-        //            {
-        //                DiskDeviceClass disks = new DiskDeviceClass();
-        //                foreach (int index in DiskNumbers)
-        //                {
-        //                    if (index < disks.Devices.Count)
-        //                    {
-        //                        _disks.Add(disks.Devices[index]);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        return _disks;
-        //    }
-        //}
-
         public List<Device> Disks
         {
             get
@@ -119,55 +95,20 @@ namespace UsbEject.Library
                 if (_disks == null)
                 {
                     _disks = new List<Device>();
-                    string DeviceIdStr = DeviceIdString;
-                    if (DeviceIdStr.Trim().Length > 0)
+
+                    if (DiskNumbers != null)
                     {
-                        DiskDeviceClass diskdc = new DiskDeviceClass();
-                        foreach (Library.Device dev in diskdc.Devices)
+                        DiskDeviceClass disks = new DiskDeviceClass();
+                        foreach (int index in DiskNumbers)
                         {
-                            if (dev.Path.ToUpper().StartsWith("\\\\?\\" + DeviceIdStr.Replace("\\", "#").ToUpper()))
+                            if (index < disks.Devices.Count)
                             {
-                                _disks.Add(dev);
+                                _disks.Add(disks.Devices[index]);
                             }
                         }
                     }
-                    //This is the old method. Unfortunately it only works with 1 Usb Device connected
-                    //If DiskNumbers IsNot Nothing Then
-                    // Dim diskdc As New DiskDeviceClass()
-                    // 'try me.index instead???
-                    // For Each index As Integer In DiskNumbers
-                    // If index < diskdc.Devices.Count Then
-                    // _disks.Add(diskdc.Devices(index))
-                    // End If
-                    // Next
-                    //End If
                 }
                 return _disks;
-            }
-        }
-
-        private string DeviceIdString
-        {
-            get
-            {
-                string DeviceIdStr = "";
-                if (_diskNumbers == null)
-                {
-                    List<Device> numbers = new List<Device>();
-                    if (LogicalDrive != null)
-                    {
-                        int parentDevInst = 0;
-
-                        parentDevInst = 0;
-                        Library.Native.CM_Get_Parent(ref parentDevInst, DeviceInfoData.devInst, 0);
-                        StringBuilder sbDeviceIdString = new StringBuilder(1024);
-                        Library.Native.CM_Get_Device_ID(parentDevInst, sbDeviceIdString, sbDeviceIdString.Capacity, 0);
-                        DeviceIdStr = sbDeviceIdString.ToString();
-                        //Debug.WriteLine("DeviceIdString = " + DeviceIdStr)
-
-                    }
-                }
-                return DeviceIdStr;
             }
         }
 

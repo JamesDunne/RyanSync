@@ -255,6 +255,7 @@ namespace RyanSync
 
         private bool syncServerToFrame()
         {
+            lblNotification.Text = "Syncing...";
             if (filesSynchronizing < filesToSynchronize) return false;
 
             try
@@ -364,6 +365,8 @@ namespace RyanSync
                                 //MessageBox.Show(this, "Completed", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 lblNotification.Text = "Completed Successfully";
 
+                                System.Threading.Thread.Sleep(5000);     //give time to finish writing
+
                                 //Eject the USB drive:
                                 EjectUSBDrive(frameDriveLetter + ":");
                                 System.Threading.Thread.Sleep(5000);     //give time to eject
@@ -371,7 +374,7 @@ namespace RyanSync
                                 if (mySerialPort.IsOpen)
                                 {
                                     mySerialPort.DtrEnable = false;
-                                    System.Threading.Thread.Sleep(5000);     //give an extra second to disconnect fully.
+                                    System.Threading.Thread.Sleep(5000);     //give time to disconnect fully.
                                     mySerialPort.Close();
                                 }
                             }));
@@ -412,7 +415,7 @@ namespace RyanSync
             if (!syncServerToFrame())
             {
                 //MessageBox.Show(this, "Failed", "Fail", MessageBoxButton.OK, MessageBoxImage.Error);
-                lblNotification.Text = "Failed Sync";
+                //lblNotification.Text = "Failed Sync";
             }
         }
 
