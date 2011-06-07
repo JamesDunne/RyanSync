@@ -398,12 +398,12 @@ namespace RyanSync
         {
             //Eject the USB drive:
             EjectUSBDrive(frameDriveLetter + ":");
-            System.Threading.Thread.Sleep(5000);     //give time to eject
+            System.Threading.Thread.Sleep(10000);     //give time to eject
 
             if (mySerialPort.IsOpen)
             {
                 mySerialPort.DtrEnable = false;
-                System.Threading.Thread.Sleep(5000);     //give time to disconnect fully.
+                System.Threading.Thread.Sleep(10000);     //give time to disconnect fully.
                 mySerialPort.Close();
             }
         }
