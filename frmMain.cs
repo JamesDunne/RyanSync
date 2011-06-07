@@ -13,6 +13,7 @@ using System.Runtime.Serialization.Json;
 using System.Threading;
 using System.Diagnostics;
 using System.IO.Ports;
+using UsbEject.Library;
 
 namespace RyanSync
 {
@@ -43,6 +44,7 @@ namespace RyanSync
         private string[] serverFiles = null;
         private bool shouldSync = false;
 
+        private string frameDriveLetter = "";
         private DirectoryInfo frameDirectory = null;
         private string[] frameFiles = null;
 
@@ -196,6 +198,9 @@ namespace RyanSync
                 if (frameDrive == null)
                     return false;
 
+                //retrive drive letter:
+                frameDriveLetter = frameDrive.Name.Substring(0, 1);
+
                 // Now find the dedicated subdirectory (currently only one level deep allowed):
                 frameDirectory = (
                     from dir in frameDrive.RootDirectory.GetDirectories()
@@ -268,10 +273,21 @@ namespace RyanSync
                 return false;
             }
 
-            if (!refreshServerSync()) return false;
-            if (serverFiles == null) return false;
+            if (!refreshServerSync() && !cbxForceSync.Checked)
+            {
+                return false;
+            }
+            if (serverFiles == null)
+            {
+                lblNotification.Text = "No files found on server.";
+                return false;
+            }
             refreshFrameAndAsk();
-            if (frameFiles == null) return false;
+            if (frameFiles == null)
+            {
+                lblNotification.Text = "Frame already up to date.";
+                return false;
+            }
 
             // Pick only new files from the server:
             var toSync = serverFiles.Except(frameFiles).ToList();
@@ -348,6 +364,10 @@ namespace RyanSync
                                 //MessageBox.Show(this, "Completed", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 lblNotification.Text = "Completed Successfully";
 
+                                //Eject the USB drive:
+                                EjectUSBDrive(frameDriveLetter + ":");
+                                System.Threading.Thread.Sleep(5000);     //give time to eject
+
                                 if (mySerialPort.IsOpen)
                                 {
                                     mySerialPort.DtrEnable = false;
@@ -360,6 +380,21 @@ namespace RyanSync
                 }), rq);
             }
             return true;
+        }
+
+        public static void EjectUSBDrive(string DriveLetterToEject)
+        {
+            VolumeDeviceClass volumeDeviceClass = new VolumeDeviceClass();
+
+            foreach (Volume device in volumeDeviceClass.Devices)
+            {
+                if (DriveLetterToEject == device.LogicalDrive)
+                {
+                    //Eject if found matching drive letter
+                    device.Eject(false);
+                    break;
+                }
+            }
         }
 
         public static void CopyStream(Stream input, Stream output)

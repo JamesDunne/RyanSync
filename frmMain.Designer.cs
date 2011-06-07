@@ -38,6 +38,7 @@
             this.lblNotification = new System.Windows.Forms.Label();
             this.tmrUpdate = new System.Windows.Forms.Timer(this.components);
             this.cbxForceConnection = new System.Windows.Forms.CheckBox();
+            this.cbxForceSync = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // lstServer
@@ -48,7 +49,7 @@
             this.lstServer.FormattingEnabled = true;
             this.lstServer.Location = new System.Drawing.Point(12, 31);
             this.lstServer.Name = "lstServer";
-            this.lstServer.Size = new System.Drawing.Size(319, 290);
+            this.lstServer.Size = new System.Drawing.Size(319, 303);
             this.lstServer.TabIndex = 0;
             // 
             // lstFolder
@@ -59,13 +60,13 @@
             this.lstFolder.FormattingEnabled = true;
             this.lstFolder.Location = new System.Drawing.Point(337, 31);
             this.lstFolder.Name = "lstFolder";
-            this.lstFolder.Size = new System.Drawing.Size(319, 290);
+            this.lstFolder.Size = new System.Drawing.Size(319, 303);
             this.lstFolder.TabIndex = 1;
             // 
             // btnSync
             // 
             this.btnSync.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSync.Location = new System.Drawing.Point(570, 330);
+            this.btnSync.Location = new System.Drawing.Point(570, 340);
             this.btnSync.Name = "btnSync";
             this.btnSync.Size = new System.Drawing.Size(86, 27);
             this.btnSync.TabIndex = 2;
@@ -95,16 +96,16 @@
             // pgbUpdateProgress
             // 
             this.pgbUpdateProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pgbUpdateProgress.Location = new System.Drawing.Point(276, 330);
+            this.pgbUpdateProgress.Location = new System.Drawing.Point(337, 348);
             this.pgbUpdateProgress.Name = "pgbUpdateProgress";
-            this.pgbUpdateProgress.Size = new System.Drawing.Size(288, 19);
+            this.pgbUpdateProgress.Size = new System.Drawing.Size(227, 19);
             this.pgbUpdateProgress.TabIndex = 5;
             // 
             // lblNotification
             // 
             this.lblNotification.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblNotification.AutoSize = true;
-            this.lblNotification.Location = new System.Drawing.Point(12, 328);
+            this.lblNotification.Location = new System.Drawing.Point(9, 360);
             this.lblNotification.Name = "lblNotification";
             this.lblNotification.Size = new System.Drawing.Size(70, 13);
             this.lblNotification.TabIndex = 6;
@@ -118,19 +119,30 @@
             // cbxForceConnection
             // 
             this.cbxForceConnection.AutoSize = true;
-            this.cbxForceConnection.Location = new System.Drawing.Point(135, 336);
+            this.cbxForceConnection.Location = new System.Drawing.Point(158, 336);
             this.cbxForceConnection.Name = "cbxForceConnection";
-            this.cbxForceConnection.Size = new System.Drawing.Size(96, 17);
+            this.cbxForceConnection.Size = new System.Drawing.Size(152, 17);
             this.cbxForceConnection.TabIndex = 7;
-            this.cbxForceConnection.Text = "Force Connect";
+            this.cbxForceConnection.Text = "Manually Connect to frame";
             this.cbxForceConnection.UseVisualStyleBackColor = true;
             this.cbxForceConnection.CheckedChanged += new System.EventHandler(this.cbxForceConnection_CheckedChanged);
+            // 
+            // cbxForceSync
+            // 
+            this.cbxForceSync.AutoSize = true;
+            this.cbxForceSync.Location = new System.Drawing.Point(12, 336);
+            this.cbxForceSync.Name = "cbxForceSync";
+            this.cbxForceSync.Size = new System.Drawing.Size(114, 17);
+            this.cbxForceSync.TabIndex = 8;
+            this.cbxForceSync.Text = "Force Server Sync";
+            this.cbxForceSync.UseVisualStyleBackColor = true;
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(662, 361);
+            this.ClientSize = new System.Drawing.Size(662, 379);
+            this.Controls.Add(this.cbxForceSync);
             this.Controls.Add(this.cbxForceConnection);
             this.Controls.Add(this.lblNotification);
             this.Controls.Add(this.pgbUpdateProgress);
@@ -139,7 +151,6 @@
             this.Controls.Add(this.btnSync);
             this.Controls.Add(this.lstFolder);
             this.Controls.Add(this.lstServer);
-            this.MaximumSize = new System.Drawing.Size(670, 388);
             this.MinimumSize = new System.Drawing.Size(670, 388);
             this.Name = "frmMain";
             this.Text = "Sync Pictures";
@@ -160,6 +171,7 @@
         private System.Windows.Forms.Label lblNotification;
         private System.Windows.Forms.Timer tmrUpdate;
         private System.Windows.Forms.CheckBox cbxForceConnection;
+        private System.Windows.Forms.CheckBox cbxForceSync;
     }
 }
 

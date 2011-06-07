@@ -105,6 +105,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="USBEjectLib\Device.cs" />
+    <Compile Include="USBEjectLib\DeviceCapabilities.cs" />
+    <Compile Include="USBEjectLib\DeviceClass.cs" />
+    <Compile Include="USBEjectLib\DiskDeviceClass.cs" />
+    <Compile Include="USBEjectLib\Native.cs" />
+    <Compile Include="USBEjectLib\Volume.cs" />
+    <Compile Include="USBEjectLib\VolumeDeviceClass.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
