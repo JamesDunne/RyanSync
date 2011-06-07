@@ -41,6 +41,7 @@ namespace RyanSync
 
         private Uri serverBaseUri = null;
         private string[] serverFiles = null;
+        private bool shouldSync = false;
 
         private DirectoryInfo frameDirectory = null;
         private string[] frameFiles = null;
@@ -70,10 +71,12 @@ namespace RyanSync
                 {
                     HttpWebResponse rsp = (HttpWebResponse)myRq.EndGetResponse(ar);
 
-                    handleServerResponse(myRq, rsp);
+                    shouldSync = handleServerResponse(myRq, rsp);
                 }
                 catch (Exception ex)
                 {
+                    shouldSync = false;
+
                     Trace.WriteLine(ex.ToString());
                     
                     //Dispatcher.Invoke((Action)(() =>
@@ -87,7 +90,7 @@ namespace RyanSync
             }), rq);
         }
 
-        private void refreshServerSync()
+        private bool refreshServerSync()
         {
             Uri serverUri = Properties.Settings.Default.RyanServer;
 
@@ -101,30 +104,73 @@ namespace RyanSync
 
             HttpWebResponse rsp = (HttpWebResponse)rq.GetResponse();
 
-            handleServerResponse(rq, rsp);
+            return handleServerResponse(rq, rsp);
         }
 
-        private void handleServerResponse(HttpWebRequest req, HttpWebResponse rsp)
+        private bool handleServerResponse(HttpWebRequest req, HttpWebResponse rsp)
         {
-            // Deserialize the JSON response into our data contract:
-            var files = (FileList)new DataContractJsonSerializer(typeof(FileList)).ReadObject(rsp.GetResponseStream());
-            serverBaseUri = new Uri(files.BaseUrl);
-            serverFiles = (
-                from f in files.FileNames
-                orderby f ascending
-                select f
-            ).ToArray();
-
-            // Add the filenames to the list:
-            //Dispatcher.Invoke((Action)(() =>
-            UIBlockingInvoke(new MethodInvoker(delegate()
+            using (var ms = new MemoryStream())
             {
-                lstServer.Items.Clear();
-                foreach (string fileName in serverFiles)
+                // Copy the response stream to our MemoryStream:
+                CopyStream(rsp.GetResponseStream(), ms);
+                
+                bool doSync = true;
+
+                var cachedFileInfo = new FileInfo(@"cached.json");
+
+                if (!cachedFileInfo.Exists)
                 {
-                    lstServer.Items.Add(fileName);
+                    // Cache the response:
+                    using (var fs = File.Create(cachedFileInfo.FullName, 8192, FileOptions.WriteThrough))
+                    {
+                        ms.Seek(0L, SeekOrigin.Begin);
+                        CopyStream(ms, fs);
+                    }
                 }
-            }));
+                else
+                {
+                    // Check the diff between the last cached response and the current response:
+                    if (ms.Length != cachedFileInfo.Length)
+                    {
+                        // Length changed, obvious indication that sync is needed:
+                        doSync = true;
+                    }
+                    else
+                    {
+                        doSync = false;
+
+                        // Read the cached response into memory and compare byte-by-byte with the latest response:
+                        byte[] cached = File.ReadAllBytes(cachedFileInfo.FullName);
+                        byte[] actual = ms.ToArray();
+
+                        // If any of the bytes are not equal, do synchronization:
+                        doSync = Enumerable.Range(0, cached.Length).Any(i => cached[i] != actual[i]);
+                    }
+                }
+
+                // Deserialize the JSON response into our data contract:
+                ms.Seek(0L, SeekOrigin.Begin);
+                var files = (FileList)new DataContractJsonSerializer(typeof(FileList)).ReadObject(ms);
+                serverBaseUri = new Uri(files.BaseUrl);
+                serverFiles = (
+                    from f in files.FileNames
+                    orderby f ascending
+                    select f
+                ).ToArray();
+
+                // Add the filenames to the list:
+                //Dispatcher.Invoke((Action)(() =>
+                UIBlockingInvoke(new MethodInvoker(delegate()
+                {
+                    lstServer.Items.Clear();
+                    foreach (string fileName in serverFiles)
+                    {
+                        lstServer.Items.Add(fileName);
+                    }
+                }));
+
+                return doSync;
+            }
         }
 
         private void refreshFrameAndAsk()
@@ -222,10 +268,10 @@ namespace RyanSync
                 return false;
             }
 
+            if (!refreshServerSync()) return false;
+            if (serverFiles == null) return false;
             refreshFrameAndAsk();
             if (frameFiles == null) return false;
-            refreshServerSync();
-            if (serverFiles == null) return false;
 
             // Pick only new files from the server:
             var toSync = serverFiles.Except(frameFiles).ToList();
