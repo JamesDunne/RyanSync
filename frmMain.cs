@@ -246,7 +246,7 @@ namespace RyanSync
             if (!syncServerToFrame())
             {
                 //MessageBox.Show(this, "Failed", "Fail", MessageBoxButton.OK, MessageBoxImage.Error);
-                lblNotification.Text = "Failed Sync";
+                //lblNotification.Text = "Failed Sync";
             }
         }
 
@@ -256,7 +256,20 @@ namespace RyanSync
         private bool syncServerToFrame()
         {
             lblNotification.Text = "Syncing...";
+            Application.DoEvents();         //Display Syncing..
+
             if (filesSynchronizing < filesToSynchronize) return false;
+
+            if (!refreshServerSync() && !cbxForceSync.Checked)
+            {
+                lblNotification.Text = "No new files to Sync with Server.";
+                return false;
+            }
+            if (serverFiles == null)
+            {
+                lblNotification.Text = "No files found on server.";
+                return false;
+            }
 
             try
             {
@@ -274,19 +287,11 @@ namespace RyanSync
                 return false;
             }
 
-            if (!refreshServerSync() && !cbxForceSync.Checked)
-            {
-                return false;
-            }
-            if (serverFiles == null)
-            {
-                lblNotification.Text = "No files found on server.";
-                return false;
-            }
             refreshFrameAndAsk();
             if (frameFiles == null)
             {
-                lblNotification.Text = "Frame already up to date.";
+                lblNotification.Text = "Couldn't connect to the frame.";
+                DisconnectFromDrive(frameDriveLetter);
                 return false;
             }
 
@@ -295,7 +300,8 @@ namespace RyanSync
             if (toSync.Count == 0)
             {
                 //MessageBox.Show(this, "Completed", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                lblNotification.Text = "Completed successfully.";
+                lblNotification.Text = "Frame is already up to date.";
+                DisconnectFromDrive(frameDriveLetter);
                 return true;
             }
 
@@ -361,28 +367,34 @@ namespace RyanSync
                             UIBlockingInvoke(new MethodInvoker(delegate()
                             {
                                 pgbUpdateProgress.Visible = false;
-                                btnSync.Enabled = true;
                                 //MessageBox.Show(this, "Completed", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 lblNotification.Text = "Completed Successfully";
+                                Application.DoEvents();         //Display Syncing..
 
                                 System.Threading.Thread.Sleep(5000);     //give time to finish writing
 
-                                //Eject the USB drive:
-                                EjectUSBDrive(frameDriveLetter + ":");
-                                System.Threading.Thread.Sleep(5000);     //give time to eject
-
-                                if (mySerialPort.IsOpen)
-                                {
-                                    mySerialPort.DtrEnable = false;
-                                    System.Threading.Thread.Sleep(5000);     //give time to disconnect fully.
-                                    mySerialPort.Close();
-                                }
+                                DisconnectFromDrive(frameDriveLetter);
+                                btnSync.Enabled = true;
                             }));
                         }
                     }
                 }), rq);
             }
             return true;
+        }
+
+        private void DisconnectFromDrive(string frameDriveLetter)
+        {
+            //Eject the USB drive:
+            EjectUSBDrive(frameDriveLetter + ":");
+            System.Threading.Thread.Sleep(5000);     //give time to eject
+
+            if (mySerialPort.IsOpen)
+            {
+                mySerialPort.DtrEnable = false;
+                System.Threading.Thread.Sleep(5000);     //give time to disconnect fully.
+                mySerialPort.Close();
+            }
         }
 
         public static void EjectUSBDrive(string DriveLetterToEject)
