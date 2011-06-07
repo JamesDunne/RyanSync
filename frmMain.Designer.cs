@@ -39,6 +39,7 @@
             this.tmrUpdate = new System.Windows.Forms.Timer(this.components);
             this.cbxForceConnection = new System.Windows.Forms.CheckBox();
             this.cbxForceSync = new System.Windows.Forms.CheckBox();
+            this.btnEject = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lstServer
@@ -137,11 +138,22 @@
             this.cbxForceSync.Text = "Force Server Sync";
             this.cbxForceSync.UseVisualStyleBackColor = true;
             // 
+            // btnEject
+            // 
+            this.btnEject.Location = new System.Drawing.Point(256, 355);
+            this.btnEject.Name = "btnEject";
+            this.btnEject.Size = new System.Drawing.Size(75, 23);
+            this.btnEject.TabIndex = 9;
+            this.btnEject.Text = "Eject";
+            this.btnEject.UseVisualStyleBackColor = true;
+            this.btnEject.Click += new System.EventHandler(this.btnEject_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(662, 379);
+            this.Controls.Add(this.btnEject);
             this.Controls.Add(this.cbxForceSync);
             this.Controls.Add(this.cbxForceConnection);
             this.Controls.Add(this.lblNotification);
@@ -172,6 +184,7 @@
         private System.Windows.Forms.Timer tmrUpdate;
         private System.Windows.Forms.CheckBox cbxForceConnection;
         private System.Windows.Forms.CheckBox cbxForceSync;
+        private System.Windows.Forms.Button btnEject;
     }
 }
 

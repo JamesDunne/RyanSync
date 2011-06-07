@@ -469,5 +469,11 @@ namespace RyanSync
             }
         }
 
+        private void btnEject_Click(object sender, EventArgs e)
+        {
+            string Letter = Microsoft.VisualBasic.Interaction.InputBox("Enter drive letter to Eject: ","Letter", "", 0,0);
+            EjectUSBDrive(Letter + ":");
+        }
+
     }
 }

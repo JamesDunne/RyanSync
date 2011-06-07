@@ -104,6 +104,14 @@ namespace UsbEject.Library
             }
         }
 
+        internal Library.Native.SP_DEVINFO_DATA DeviceInfoData
+        {
+            ///
+            /// Gets the device's SP_DEVINFO_DATA.
+            ///
+            get { return _deviceInfoData; }
+        }
+
         /// <summary>
         /// Gets the device's class Guid as a string.
         /// </summary>
