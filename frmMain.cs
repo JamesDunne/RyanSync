@@ -490,5 +490,26 @@ namespace RyanSync
             EjectUSBDrive(Letter + ":");
         }
 
+        private void frmMain_Resize(object sender, EventArgs e)
+        {
+            if (FormWindowState.Minimized == this.WindowState)
+            {
+                myNotifyIcon.Visible = true;
+                myNotifyIcon.BalloonTipText = "RyanSync";
+                myNotifyIcon.ShowBalloonTip(500);
+                this.Hide();
+            }
+            else if (FormWindowState.Normal == this.WindowState)
+            {
+                myNotifyIcon.Visible = false;
+            }
+        }
+
+        private void myNotifyIcon_Click(object sender, EventArgs e)
+        {
+            //Restore:
+            Show();
+            this.WindowState = FormWindowState.Normal;
+        }
     }
 }

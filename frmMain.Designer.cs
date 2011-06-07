@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.lstServer = new System.Windows.Forms.ListBox();
             this.lstFolder = new System.Windows.Forms.ListBox();
             this.btnSync = new System.Windows.Forms.Button();
@@ -40,6 +41,7 @@
             this.cbxForceConnection = new System.Windows.Forms.CheckBox();
             this.cbxForceSync = new System.Windows.Forms.CheckBox();
             this.btnEject = new System.Windows.Forms.Button();
+            this.myNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.SuspendLayout();
             // 
             // lstServer
@@ -148,6 +150,12 @@
             this.btnEject.UseVisualStyleBackColor = true;
             this.btnEject.Click += new System.EventHandler(this.btnEject_Click);
             // 
+            // myNotifyIcon
+            // 
+            this.myNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("myNotifyIcon.Icon")));
+            this.myNotifyIcon.Text = "Sync Pictures";
+            this.myNotifyIcon.Click += new System.EventHandler(this.myNotifyIcon_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -163,10 +171,12 @@
             this.Controls.Add(this.btnSync);
             this.Controls.Add(this.lstFolder);
             this.Controls.Add(this.lstServer);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(670, 388);
             this.Name = "frmMain";
             this.Text = "Sync Pictures";
             this.Load += new System.EventHandler(this.frmMain_Load);
+            this.Resize += new System.EventHandler(this.frmMain_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -185,6 +195,7 @@
         private System.Windows.Forms.CheckBox cbxForceConnection;
         private System.Windows.Forms.CheckBox cbxForceSync;
         private System.Windows.Forms.Button btnEject;
+        private System.Windows.Forms.NotifyIcon myNotifyIcon;
     }
 }
 
