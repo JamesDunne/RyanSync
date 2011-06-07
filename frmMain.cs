@@ -150,6 +150,17 @@ namespace RyanSync
                     }
                 }
 
+                if (doSync)
+                {
+                    // Cache the response if it's different than previous cache.
+                    using (var fs = File.Create(cachedFileInfo.FullName, 8192, FileOptions.WriteThrough))
+                    {
+                        ms.Seek(0L, SeekOrigin.Begin);
+                        CopyStream(ms, fs);
+                    }
+                }
+
+
                 // Deserialize the JSON response into our data contract:
                 ms.Seek(0L, SeekOrigin.Begin);
                 var files = (FileList)new DataContractJsonSerializer(typeof(FileList)).ReadObject(ms);
