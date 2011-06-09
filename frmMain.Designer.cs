@@ -167,6 +167,7 @@
             this.Name = "frmMain";
             this.Text = "Sync Pictures";
             this.Load += new System.EventHandler(this.frmMain_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

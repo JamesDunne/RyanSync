@@ -266,6 +266,7 @@ namespace RyanSync
                     System.Threading.Thread.Sleep(1000);        //give it a second to open the port before doing anything..
                 }
                 mySerialPort.DtrEnable = true;              //Connect
+                mySerialPort.RtsEnable = false;             //Connect
                 System.Threading.Thread.Sleep(15000);        //give it a LONG WHILE to find all the drives before doing anything..
             }
             catch (Exception ex)
@@ -374,6 +375,7 @@ namespace RyanSync
                                 if (mySerialPort.IsOpen)
                                 {
                                     mySerialPort.DtrEnable = false;
+                                    mySerialPort.RtsEnable = true;
                                     System.Threading.Thread.Sleep(5000);     //give time to disconnect fully.
                                     mySerialPort.Close();
                                 }
@@ -459,6 +461,7 @@ namespace RyanSync
                     System.Threading.Thread.Sleep(1000);        //give it a second to open the port before doing anything..
                 }
                 mySerialPort.DtrEnable = true;              //Connect
+                mySerialPort.RtsEnable = false;             //Connect
                 System.Threading.Thread.Sleep(3000);        //give it a second to open the port before doing anything..
             }
             else
@@ -466,6 +469,7 @@ namespace RyanSync
                 if (mySerialPort.IsOpen)
                 {
                     mySerialPort.DtrEnable = false;
+                    mySerialPort.RtsEnable = true;
                     System.Threading.Thread.Sleep(5000);     //give a WHILE to disconnect fully otherwise the frame goes NUTS!
                     mySerialPort.Close();
                 }
@@ -476,6 +480,17 @@ namespace RyanSync
         {
             string Letter = Microsoft.VisualBasic.Interaction.InputBox("Enter drive letter to Eject: ","Letter", "", 0,0);
             EjectUSBDrive(Letter + ":");
+        }
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //if (mySerialPort.IsOpen)
+            //{
+            //    mySerialPort.DtrEnable = false;
+            //    mySerialPort.RtsEnable = true;
+            //    System.Threading.Thread.Sleep(5000);     //give a WHILE to disconnect fully otherwise the frame goes NUTS!
+            //    mySerialPort.Close();
+            //}
         }
 
     }
