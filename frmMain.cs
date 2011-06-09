@@ -273,7 +273,7 @@ namespace RyanSync
 
             if (!refreshServerSync() && !cbxForceSync.Checked)
             {
-                lblNotification.Text = "No new files to Sync with Server.";
+                lblNotification.Text = DateTime.Now.ToString("HH:mm tt") + " No new files to Sync with Server.";
                 return false;
             }
             if (serverFiles == null)
@@ -379,7 +379,7 @@ namespace RyanSync
                             {
                                 pgbUpdateProgress.Visible = false;
                                 //MessageBox.Show(this, "Completed", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                lblNotification.Text = "Completed Successfully";
+                                lblNotification.Text = DateTime.Now.ToString("HH:mm tt") + " Completed Successfully";
                                 Application.DoEvents();         //Display Syncing..
 
                                 System.Threading.Thread.Sleep(5000);     //give time to finish writing
