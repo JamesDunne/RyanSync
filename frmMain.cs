@@ -73,12 +73,12 @@ namespace RyanSync
                 {
                     HttpWebResponse rsp = (HttpWebResponse)myRq.EndGetResponse(ar);
 
-                    shouldSync = handleServerResponse(myRq, rsp);
+                    //This should not clear shouldSync.  It should only Set it.  
+                    //shouldSync should only be cleared once the frame has been updated.
+                    handleServerResponse(myRq, rsp);
                 }
                 catch (Exception ex)
                 {
-                    shouldSync = false;
-
                     Trace.WriteLine(ex.ToString());
                     
                     //Dispatcher.Invoke((Action)(() =>
@@ -92,6 +92,10 @@ namespace RyanSync
             }), rq);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Returns internal variable shouldSync indicating whether the frame needs to be be synced or not.</returns>
         private bool refreshServerSync()
         {
             Uri serverUri = Properties.Settings.Default.RyanServer;
@@ -182,7 +186,12 @@ namespace RyanSync
                     }
                 }));
 
-                return doSync;
+                if (doSync)
+                {
+                    shouldSync = true;
+                }
+
+                return shouldSync;
             }
         }
 
@@ -314,6 +323,7 @@ namespace RyanSync
                 //MessageBox.Show(this, "Completed", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 lblNotification.Text = "Frame is already up to date.";
                 DisconnectFromDrive(frameDriveLetter);
+                shouldSync = false;
                 return true;
             }
 
@@ -381,11 +391,14 @@ namespace RyanSync
                                 pgbUpdateProgress.Visible = false;
                                 //MessageBox.Show(this, "Completed", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 lblNotification.Text = DateTime.Now.ToString("HH:mm tt") + " Completed Successfully";
-                                Application.DoEvents();         //Display Syncing..
+                                Application.DoEvents();
 
                                 System.Threading.Thread.Sleep(5000);     //give time to finish writing
 
-                                DisconnectFromDrive(frameDriveLetter);                                btnSync.Enabled = true;                            }));
+                                DisconnectFromDrive(frameDriveLetter);
+                                btnSync.Enabled = true;
+                                shouldSync = false;     //Clear this only after the entire sync operation has completed.
+                            }));
                         }
                     }
                 }), rq);
