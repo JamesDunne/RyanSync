@@ -298,8 +298,8 @@ namespace RyanSync
                     mySerialPort.Open();
                     System.Threading.Thread.Sleep(1000);        //give it a second to open the port before doing anything..
                 }
-                mySerialPort.DtrEnable = true;              //Connect
-                mySerialPort.RtsEnable = false;             //Connect
+                mySerialPort.DtrEnable = false;              //Connect
+                mySerialPort.RtsEnable = true;             //Connect
                 System.Threading.Thread.Sleep(15000);        //give it a LONG WHILE to find all the drives before doing anything..
             }
             catch (Exception ex)
@@ -312,6 +312,7 @@ namespace RyanSync
             if (frameFiles == null)
             {
                 lblNotification.Text = "Couldn't connect to the frame.";
+                Application.DoEvents();
                 DisconnectFromDrive(frameDriveLetter);
                 return false;
             }
@@ -322,6 +323,7 @@ namespace RyanSync
             {
                 //MessageBox.Show(this, "Completed", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 lblNotification.Text = "Frame is already up to date.";
+                Application.DoEvents();
                 DisconnectFromDrive(frameDriveLetter);
                 shouldSync = false;
                 return true;
@@ -412,11 +414,19 @@ namespace RyanSync
             EjectUSBDrive(frameDriveLetter + ":");
             System.Threading.Thread.Sleep(10000);     //give time to eject
 
-            if (mySerialPort.IsOpen)
+            try
             {
-                mySerialPort.DtrEnable = false;
-                System.Threading.Thread.Sleep(10000);     //give time to disconnect fully.
-                mySerialPort.Close();
+                if (mySerialPort.IsOpen)
+                {
+                    mySerialPort.DtrEnable = true;
+                    mySerialPort.RtsEnable = false;
+                    System.Threading.Thread.Sleep(10000);     //give time to disconnect fully.
+                    mySerialPort.Close();
+                }
+            }
+            catch
+            {
+                //don't care..
             }
         }
 
@@ -493,18 +503,25 @@ namespace RyanSync
                     mySerialPort.Open();
                     System.Threading.Thread.Sleep(1000);        //give it a second to open the port before doing anything..
                 }
-                mySerialPort.DtrEnable = true;              //Connect
-                mySerialPort.RtsEnable = false;             //Connect
+                mySerialPort.DtrEnable = false;              //Connect
+                mySerialPort.RtsEnable = true;             //Connect
                 System.Threading.Thread.Sleep(3000);        //give it a second to open the port before doing anything..
             }
             else
             {
-                if (mySerialPort.IsOpen)
+                try
                 {
-                    mySerialPort.DtrEnable = false;
-                    mySerialPort.RtsEnable = true;
-                    System.Threading.Thread.Sleep(5000);     //give a WHILE to disconnect fully otherwise the frame goes NUTS!
-                    mySerialPort.Close();
+                    if (mySerialPort.IsOpen)
+                    {
+                        mySerialPort.DtrEnable = true;
+                        mySerialPort.RtsEnable = false;
+                        System.Threading.Thread.Sleep(5000);     //give a WHILE to disconnect fully otherwise the frame goes NUTS!
+                        mySerialPort.Close();
+                    }
+                }
+                catch
+                {
+                    //nothing special..
                 }
             }
         }
