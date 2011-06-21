@@ -42,6 +42,10 @@
             this.cbxForceSync = new System.Windows.Forms.CheckBox();
             this.btnEject = new System.Windows.Forms.Button();
             this.myNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.cmuServer = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmuServer.SuspendLayout();
             this.SuspendLayout();
             // 
             // lstServer
@@ -49,6 +53,7 @@
             this.lstServer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstServer.ContextMenuStrip = this.cmuServer;
             this.lstServer.FormattingEnabled = true;
             this.lstServer.Location = new System.Drawing.Point(12, 31);
             this.lstServer.Name = "lstServer";
@@ -68,7 +73,7 @@
             // 
             // btnSync
             // 
-            this.btnSync.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSync.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSync.Location = new System.Drawing.Point(570, 340);
             this.btnSync.Name = "btnSync";
             this.btnSync.Size = new System.Drawing.Size(86, 27);
@@ -121,6 +126,7 @@
             // 
             // cbxForceConnection
             // 
+            this.cbxForceConnection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbxForceConnection.AutoSize = true;
             this.cbxForceConnection.Location = new System.Drawing.Point(158, 336);
             this.cbxForceConnection.Name = "cbxForceConnection";
@@ -132,6 +138,7 @@
             // 
             // cbxForceSync
             // 
+            this.cbxForceSync.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbxForceSync.AutoSize = true;
             this.cbxForceSync.Location = new System.Drawing.Point(12, 336);
             this.cbxForceSync.Name = "cbxForceSync";
@@ -142,6 +149,7 @@
             // 
             // btnEject
             // 
+            this.btnEject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnEject.Location = new System.Drawing.Point(256, 355);
             this.btnEject.Name = "btnEject";
             this.btnEject.Size = new System.Drawing.Size(75, 23);
@@ -155,6 +163,28 @@
             this.myNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("myNotifyIcon.Icon")));
             this.myNotifyIcon.Text = "Sync Pictures";
             this.myNotifyIcon.Click += new System.EventHandler(this.myNotifyIcon_Click);
+            // 
+            // cmuServer
+            // 
+            this.cmuServer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+            this.cmuServer.Name = "cmuServer";
+            this.cmuServer.Size = new System.Drawing.Size(117, 48);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.viewToolStripMenuItem.Text = "View";
+            this.viewToolStripMenuItem.Click += new System.EventHandler(this.viewToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -176,8 +206,9 @@
             this.Name = "frmMain";
             this.Text = "Sync Pictures";
             this.Load += new System.EventHandler(this.frmMain_Load);
-            this.Resize += new System.EventHandler(this.frmMain_Resize);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+            this.Resize += new System.EventHandler(this.frmMain_Resize);
+            this.cmuServer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -197,6 +228,9 @@
         private System.Windows.Forms.CheckBox cbxForceSync;
         private System.Windows.Forms.Button btnEject;
         private System.Windows.Forms.NotifyIcon myNotifyIcon;
+        private System.Windows.Forms.ContextMenuStrip cmuServer;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
     }
 }
 

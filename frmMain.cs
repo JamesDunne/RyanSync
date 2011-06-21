@@ -98,19 +98,30 @@ namespace RyanSync
         /// <returns>Returns internal variable shouldSync indicating whether the frame needs to be be synced or not.</returns>
         private bool refreshServerSync()
         {
-            Uri serverUri = Properties.Settings.Default.RyanServer;
+            try
+            {
+                Uri serverUri = Properties.Settings.Default.RyanServer;
 
-            lblServer.Text = "Server (" + serverUri.AbsoluteUri + "):";
+                lblServer.Text = "Server (" + serverUri.AbsoluteUri + "):";
 
-            Uri listUri = new Uri(serverUri, "list.php");
+                Uri listUri = new Uri(serverUri, "list.php");
 
-            // Request the list.php JSON object:
-            HttpWebRequest rq = (HttpWebRequest)HttpWebRequest.Create(listUri);
-            setupAuthorization(rq);
+                // Request the list.php JSON object:
+                HttpWebRequest rq = (HttpWebRequest)HttpWebRequest.Create(listUri);
+                setupAuthorization(rq);
 
-            HttpWebResponse rsp = (HttpWebResponse)rq.GetResponse();
+                HttpWebResponse rsp = (HttpWebResponse)rq.GetResponse();
 
-            return handleServerResponse(rq, rsp);
+                return handleServerResponse(rq, rsp);
+            }
+            catch (Exception ex)
+            {
+                UIBlockingInvoke(new MethodInvoker(delegate()
+                {
+                    lblNotification.Text = "Fail:" + ex.Message;
+                }));
+                return false;
+            }
         }
 
         private bool handleServerResponse(HttpWebRequest req, HttpWebResponse rsp)
@@ -564,6 +575,16 @@ namespace RyanSync
             //Restore:
             Show();
             this.WindowState = FormWindowState.Normal;
+        }
+
+        private void viewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
