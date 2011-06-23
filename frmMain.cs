@@ -38,6 +38,19 @@ namespace RyanSync
             lblNotification.Text = "";
             refreshServer();
             //refreshFrame();
+
+            FileInfo fi = new FileInfo(@"framefiles.cache");
+            if (fi.Exists)
+            {
+                StreamReader sr = new StreamReader(@"framefiles.cache");
+
+                lstFolder.Items.Clear();
+                while (!sr.EndOfStream)
+                {
+                    lstFolder.Items.Add(sr.ReadLine());
+                }
+                sr.Close();
+            }
         }
 
         private Uri serverBaseUri = null;
@@ -251,11 +264,17 @@ namespace RyanSync
                     select fi.Name
                 ).ToArray();
 
+                StringBuilder sb = new StringBuilder();
+                StreamWriter sw = File.CreateText(@"framefiles.cache");
+
                 lstFolder.Items.Clear();
                 foreach (var name in frameFiles)
                 {
                     lstFolder.Items.Add(name);
+                    sb.AppendLine(name);            //cache frame files
                 }
+                sw.Write(sb.ToString());
+                sw.Close();
 
                 return true;
             }
@@ -326,6 +345,34 @@ namespace RyanSync
                 Application.DoEvents();
                 DisconnectFromDrive(frameDriveLetter);
                 return false;
+            }
+
+            bool RemovedFileFromFrame = false;
+            //Delete files off the frame if they are not on the Server:
+            foreach (string FrameFile in frameFiles)
+            {
+                bool FileExistsOnServer = false;
+
+                foreach (string serverfile in serverFiles)
+                {
+                    if (FrameFile == serverfile)
+                    {
+                        FileExistsOnServer = true;
+                    }
+                }
+
+                if (!FileExistsOnServer)
+                {
+                    RemovedFileFromFrame = true;
+                    //Delete the file from the frame..
+                    File.Delete(System.IO.Path.Combine(frameDirectory.FullName, FrameFile));
+                }
+            }
+
+            if (RemovedFileFromFrame)
+            {
+                //Refresh frame file listing if we deleted something off the frame:
+                refreshFrameAndAsk();
             }
 
             // Pick only new files from the server:
