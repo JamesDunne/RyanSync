@@ -1,4 +1,5 @@
-RyanSync.suo
+*.suo
+*.user
 bin/
 obj/
 
