@@ -30,7 +30,7 @@ namespace RyanSync
         {
             string[] PortNames = System.IO.Ports.SerialPort.GetPortNames();
             //select the last port.  (Lame solution.. for now it'll work though)
-            mySerialPort.PortName = PortNames[PortNames.Length-1];
+            mySerialPort.PortName = PortNames[PortNames.Length - 1];
 
             pgbUpdateProgress.Visible = false;
             tmrUpdate.Enabled = true;
@@ -72,9 +72,9 @@ namespace RyanSync
 
             lblServer.Text = "Server (" + serverUri.AbsoluteUri + "):";
 
-            Uri listUri = new Uri(serverUri, "list.php");
+            Uri listUri = new Uri(serverUri, "list");
 
-            // Request the list.php JSON object:
+            // Request the list JSON object:
             HttpWebRequest rq = (HttpWebRequest)HttpWebRequest.Create(listUri);
             setupAuthorization(rq);
 
@@ -93,14 +93,14 @@ namespace RyanSync
                 catch (Exception ex)
                 {
                     Trace.WriteLine(ex.ToString());
-                    
+
                     //Dispatcher.Invoke((Action)(() =>
                     UIBlockingInvoke(new MethodInvoker(delegate()
                     {
                         //MessageBox.Show(this, ex.Message, "Server Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         lblNotification.Text = "Server Error";
                     }));
-                    
+
                 }
             }), rq);
         }
@@ -117,9 +117,9 @@ namespace RyanSync
 
                 lblServer.Text = "Server (" + serverUri.AbsoluteUri + "):";
 
-                Uri listUri = new Uri(serverUri, "list.php");
+                Uri listUri = new Uri(serverUri, "list");
 
-                // Request the list.php JSON object:
+                // Request the list JSON object:
                 HttpWebRequest rq = (HttpWebRequest)HttpWebRequest.Create(listUri);
                 setupAuthorization(rq);
 
@@ -143,7 +143,7 @@ namespace RyanSync
             {
                 // Copy the response stream to our MemoryStream:
                 CopyStream(rsp.GetResponseStream(), ms);
-                
+
                 bool doSync = true;
 
                 var cachedFileInfo = new FileInfo(@"cached.json");
@@ -586,7 +586,7 @@ namespace RyanSync
 
         private void btnEject_Click(object sender, EventArgs e)
         {
-            string Letter = Microsoft.VisualBasic.Interaction.InputBox("Enter drive letter to Eject: ","Letter", "", 0,0);
+            string Letter = Microsoft.VisualBasic.Interaction.InputBox("Enter drive letter to Eject: ", "Letter", "", 0, 0);
             EjectUSBDrive(Letter + ":");
         }
 
