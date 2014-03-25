@@ -2,14 +2,14 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RyanSync.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="RyanServer" Type="System.Uri" Scope="User">
-      <Value Profile="(Default)">http://bittwiddlers.org/ryan/</Value>
-    </Setting>
     <Setting Name="DigitalFrameLabel" Type="System.String" Scope="User">
       <Value Profile="(Default)">NIX</Value>
     </Setting>
     <Setting Name="DigitalFrameSubdirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)">NIX Internal Memory   (Copy all Media Files here)</Value>
+    </Setting>
+    <Setting Name="ListURL" Type="System.Uri" Scope="User">
+      <Value Profile="(Default)">http://ryan.bittwiddlers.org/list</Value>
     </Setting>
   </Settings>
 </SettingsFile>

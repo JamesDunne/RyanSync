@@ -68,11 +68,9 @@ namespace RyanSync
 
         private void refreshServer()
         {
-            Uri serverUri = Properties.Settings.Default.RyanServer;
+            Uri listUri = Properties.Settings.Default.ListURL;
 
-            lblServer.Text = "Server (" + serverUri.AbsoluteUri + "):";
-
-            Uri listUri = new Uri(serverUri, "list");
+            lblServer.Text = "Server (" + listUri.AbsoluteUri + "):";
 
             // Request the list JSON object:
             HttpWebRequest rq = (HttpWebRequest)HttpWebRequest.Create(listUri);
@@ -113,11 +111,9 @@ namespace RyanSync
         {
             try
             {
-                Uri serverUri = Properties.Settings.Default.RyanServer;
+                Uri listUri = Properties.Settings.Default.ListURL;
 
-                lblServer.Text = "Server (" + serverUri.AbsoluteUri + "):";
-
-                Uri listUri = new Uri(serverUri, "list");
+                lblServer.Text = "Server (" + listUri.AbsoluteUri + "):";
 
                 // Request the list JSON object:
                 HttpWebRequest rq = (HttpWebRequest)HttpWebRequest.Create(listUri);

@@ -25,18 +25,6 @@ namespace RyanSync.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://bittwiddlers.org/ryan/")]
-        public global::System.Uri RyanServer {
-            get {
-                return ((global::System.Uri)(this["RyanServer"]));
-            }
-            set {
-                this["RyanServer"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("NIX")]
         public string DigitalFrameLabel {
             get {
@@ -56,6 +44,18 @@ namespace RyanSync.Properties {
             }
             set {
                 this["DigitalFrameSubdirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://ryan.bittwiddlers.org/list")]
+        public global::System.Uri ListURL {
+            get {
+                return ((global::System.Uri)(this["ListURL"]));
+            }
+            set {
+                this["ListURL"] = value;
             }
         }
     }
