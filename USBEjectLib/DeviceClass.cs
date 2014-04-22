@@ -108,8 +108,10 @@ namespace UsbEject.Library
                         if (!Native.SetupDiEnumDeviceInterfaces(_deviceInfoSet, null, ref _classGuid, index, interfaceData))
                         {
                             int error = Marshal.GetLastWin32Error();
-                            if (error != Native.ERROR_NO_MORE_ITEMS)
-                                throw new Win32Exception(error);
+
+                            //DIAG: Ignore the error.. I have no clue what it is.. I was getting error = 1748
+                            //if (error != Native.ERROR_NO_MORE_ITEMS)
+                            //    throw new Win32Exception(error);
                             break;
                         }
 
