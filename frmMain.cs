@@ -28,9 +28,23 @@ namespace RyanSync
 
         private void frmMain_Load(object sender, EventArgs e)
         {
+            int HighestPortNumber = 1;
+            int HighestIndex = 0;
+            int PortNumber = 1;
             string[] PortNames = System.IO.Ports.SerialPort.GetPortNames();
             //select the last port.  (Lame solution.. for now it'll work though)
             mySerialPort.PortName = PortNames[PortNames.Length - 1];
+
+            for (int i = 0; i < PortNames.Length; i++ )
+            {
+                PortNumber = int.Parse(PortNames[i].Substring(3, PortNames[i].Length - 3));
+                if (PortNumber > HighestPortNumber) {
+                    HighestPortNumber = PortNumber;
+                    HighestIndex = i;
+                }
+            }
+
+            mySerialPort.PortName = PortNames[HighestIndex];
 
             pgbUpdateProgress.Visible = false;
             tmrUpdate.Enabled = true;
